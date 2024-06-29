@@ -17,21 +17,35 @@ export const postRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
+    .input(z.object({ habitId: z.number().min(1) }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { habitId } = input;
 
       await ctx.db.insert(posts).values({
-        name: input.name,
+        habitId,
         createdById: ctx.session.user.id,
       });
     }),
 
   getLatest: publicProcedure.query(({ ctx }) => {
-    return ctx.db.query.posts.findFirst({
+    return ctx.db.query.posts.findMany({
       orderBy: (posts, { desc }) => [desc(posts.createdAt)],
+      limit: 5,
     });
+  }),
+  getPoints: protectedProcedure.query(async ({ ctx }) => {
+    const fetchedPosts = await ctx.db.query.posts.findMany({
+      with: {
+        habit: true,
+      },
+      //   where: eq(posts.createdById, ctx.session.user.id),
+    });
+
+    let points = 0;
+    fetchedPosts.forEach((post) => {
+      points += post.habit.points;
+    });
+    return { points };
   }),
 
   getSecretMessage: protectedProcedure.query(() => {
