@@ -17,7 +17,7 @@ export default async function Home() {
           </div>
         </h1>
         <div className="text-base font-semibold tracking-tight">
-          Don't just have fun, earn it.
+          Don&apos;t just have fun, earn it.
         </div>
         <SignInWithGoogleButton />
       </main>
@@ -99,7 +99,7 @@ async function CrudShowcase() {
             )}
           </ul>
         ) : (
-          <p>You haven't worked enough to have fun 🤨</p>
+          <p>You haven&apos;t worked enough to have fun 🤨</p>
         )}
       </div>
       {latestPosts && latestPosts.length > 0 ? (
