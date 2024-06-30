@@ -83,9 +83,7 @@ export const habitRouter = createTRPCRouter({
       };
     }),
 
-  checkTemplateHabits: protectedProcedure.mutation(async ({ ctx, input }) => {
-    // simulate a slow db call
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
+  checkTemplateHabits: protectedProcedure.mutation(async ({ ctx }) => {
     const existingHabits = await ctx.db.query.habits.findMany();
     if (existingHabits.length > 0) {
       return { ok: true };
