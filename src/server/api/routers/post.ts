@@ -6,6 +6,7 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 import { posts } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
@@ -27,10 +28,11 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  getLatest: publicProcedure.query(({ ctx }) => {
+  getLatest: protectedProcedure.query(({ ctx }) => {
     return ctx.db.query.posts.findMany({
       orderBy: (posts, { desc }) => [desc(posts.createdAt)],
       limit: 3,
+      where: eq(posts.createdById, ctx.session.user.id),
     });
   }),
   getPoints: protectedProcedure.query(async ({ ctx }) => {
@@ -38,7 +40,7 @@ export const postRouter = createTRPCRouter({
       with: {
         habit: true,
       },
-      //   where: eq(posts.createdById, ctx.session.user.id),
+      where: eq(posts.createdById, ctx.session.user.id),
     });
 
     let points = 0;

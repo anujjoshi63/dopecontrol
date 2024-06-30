@@ -6,6 +6,7 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 import { habits } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
 
 const templateHabits = [
   {
@@ -84,7 +85,9 @@ export const habitRouter = createTRPCRouter({
     }),
 
   checkTemplateHabits: protectedProcedure.mutation(async ({ ctx }) => {
-    const existingHabits = await ctx.db.query.habits.findMany();
+    const existingHabits = await ctx.db.query.habits.findMany({
+      where: eq(habits.createdById, ctx.session.user.id),
+    });
     if (existingHabits.length > 0) {
       return { ok: true };
     }
@@ -102,8 +105,10 @@ export const habitRouter = createTRPCRouter({
   }),
   getHabits: protectedProcedure.query(async ({ ctx }) => {
     // map id with other data
-    const habits = await ctx.db.query.habits.findMany();
-    const habitIdToHabit = habits.reduce(
+    const allHabits = await ctx.db.query.habits.findMany({
+      where: eq(habits.createdById, ctx.session.user.id),
+    });
+    const habitIdToHabit = allHabits.reduce(
       (acc: Record<string, typeof habit>, habit) => {
         acc[habit.id] = habit;
         return acc;
