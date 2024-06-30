@@ -41,7 +41,7 @@ export function CreatePost({
     if (+habitId === 0) return "";
 
     const habit = userHabits[+habitId];
-    if (!habit || habit.points === undefined) return "";
+    if (habit?.points === undefined) return "";
 
     const action = habit.points < 0 ? "cost" : "earn";
     return `This action will ${action} you ${habit.points} points.`;
