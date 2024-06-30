@@ -30,7 +30,7 @@ export const postRouter = createTRPCRouter({
   getLatest: publicProcedure.query(({ ctx }) => {
     return ctx.db.query.posts.findMany({
       orderBy: (posts, { desc }) => [desc(posts.createdAt)],
-      limit: 5,
+      limit: 3,
     });
   }),
   getPoints: protectedProcedure.query(async ({ ctx }) => {
