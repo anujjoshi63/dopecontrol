@@ -111,23 +111,25 @@ async function CrudShowcase() {
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            {latestPosts.map((post) => (
-              <div
-                className="w-full rounded-xl bg-white bg-opacity-5 px-4 py-3"
-                key={post.id}
-              >
-                <div className="flex justify-between">
-                  <div className="">{userHabits?.[post.habitId]?.name}</div>
-                  <div>
-                    {userHabits?.[post.habitId]?.points !== undefined &&
-                    userHabits?.[post?.habitId]?.points! > 0
-                      ? `+${userHabits?.[post.habitId]?.points}`
-                      : userHabits?.[post.habitId]?.points}
+            {latestPosts.map((post) => {
+              const habit = userHabits?.[post.habitId];
+              if (!habit) return null;
+              const pointsDisplay =
+                habit?.points > 0 ? `+${habit.points}` : habit?.points;
+
+              return (
+                <div
+                  className="w-full rounded-xl bg-white bg-opacity-5 px-4 py-3"
+                  key={post.id}
+                >
+                  <div className="flex justify-between">
+                    <div>{habit?.name}</div>
+                    <div>{pointsDisplay}</div>
                   </div>
+                  <div>{new Date(post.createdAt).toDateString()}</div>
                 </div>
-                <div>{new Date(post.createdAt).toDateString()}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       ) : (
