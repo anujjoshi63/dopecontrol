@@ -1,10 +1,10 @@
-import Link from "next/link";
-
 import { CreatePost } from "@/app/_components/create-post";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
 import clsx from "clsx";
-import Image from "next/image";
+import ProfilePicture from "./_components/ProfilePicture";
+import SignInWithGoogleButton from "./_components/login";
+
 export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
@@ -19,12 +19,7 @@ export default async function Home() {
         <div className="text-base font-semibold tracking-tight">
           Don't just have fun, earn it.
         </div>
-        <Link
-          href={session ? "/api/auth/signout" : "/api/auth/signin"}
-          className="mt-6 rounded-full bg-white/10 bg-gradient-to-r from-[hsla(170,56%,20%,10%)] to-[hsla(180,35%,12%,10%)] px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-        >
-          Get Started
-        </Link>
+        <SignInWithGoogleButton />
       </main>
     );
 
@@ -33,21 +28,13 @@ export default async function Home() {
       <div className="container flex flex-1 flex-col items-center justify-start gap-12 px-4 py-6">
         <h1 className="flex w-full justify-between text-5xl font-extrabold tracking-tight sm:text-[2rem]">
           <div></div>
-          <div>
+          <div className="text-center text-3xl lg:text-5xl">
             Dope <span className="text-[hsl(162,78%,42%)]">Control</span>
           </div>
-          <Link
-            href={session ? "/api/auth/signout" : "/api/auth/signin"}
-            className=""
-          >
-            <Image
-              src={session.user.image!}
-              width={35}
-              height={35}
-              className="rounded-full outline outline-2 outline-offset-2 outline-emerald-700 transition-all duration-200 hover:outline-emerald-500"
-              alt="User Profile Picture"
-            />
-          </Link>
+          <ProfilePicture
+            imageURL={session.user.image!}
+            name={session.user.name!}
+          />
         </h1>
 
         <div className="flex flex-col items-center gap-2">
@@ -75,13 +62,14 @@ async function CrudShowcase() {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
 
+  await api.habit.checkTemplateHabits();
   const latestPosts = await api.post.getLatest();
-  const checkHabits = await api.habit.checkTemplateHabits();
   const userHabits = await api.habit.getHabits();
   const { points } = await api.post.getPoints();
   const earnedActions = Object.values(userHabits)
     .filter((el) => el.points <= 0 && Math.abs(el.points) <= points)
-    .reduce((acc, el) => `${acc} ${el.name};;`, "");
+    .reduce((acc, el) => `${acc} ${el.name};;`, "")
+    .split(";;");
   return (
     <div className="flex w-full max-w-2xl flex-col gap-8">
       <div className="flex flex-col justify-center gap-4 rounded-xl bg-white bg-opacity-5 p-6">
@@ -101,7 +89,7 @@ async function CrudShowcase() {
         {earnedActions ? (
           <ul className="text-xl font-semibold">
             You can{" "}
-            {earnedActions.split(";;").map(
+            {earnedActions.map(
               (el, i) =>
                 el.length > 0 && (
                   <li key={el + i} className="text-lg font-normal">
@@ -117,19 +105,30 @@ async function CrudShowcase() {
       {latestPosts && latestPosts.length > 0 ? (
         <div className="flex flex-col justify-center gap-4 rounded-xl bg-white bg-opacity-5 p-6">
           <div className="flex items-center justify-between truncate text-2xl font-semibold">
-            Logs{" "}
+            Logs
             <div className="rounded-full bg-white bg-opacity-10 px-3 py-1 text-sm opacity-75">
               see all
             </div>
           </div>
-          <ul className="flex flex-col">
+          <div className="flex flex-col gap-2">
             {latestPosts.map((post) => (
-              <li className="w-full" key={post.id}>
-                -{" "}
-                {`${userHabits?.[post.habitId]?.name} -> ${userHabits?.[post.habitId]?.points}`}
-              </li>
+              <div
+                className="w-full rounded-xl bg-white bg-opacity-5 px-4 py-3"
+                key={post.id}
+              >
+                <div className="flex justify-between">
+                  <div className="">{userHabits?.[post.habitId]?.name}</div>
+                  <div>
+                    {userHabits?.[post.habitId]?.points !== undefined &&
+                    userHabits?.[post?.habitId]?.points! > 0
+                      ? `+${userHabits?.[post.habitId]?.points}`
+                      : userHabits?.[post.habitId]?.points}
+                  </div>
+                </div>
+                <div>{new Date(post.createdAt).toDateString()}</div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       ) : (
         <p>You have no posts yet.</p>
