@@ -37,6 +37,33 @@ export function CreatePost({
       setHabitId("0");
     },
   });
+  const getMessage = () => {
+    if (+habitId === 0) return "";
+
+    const habit = userHabits[+habitId];
+    if (!habit || habit.points === undefined) return "";
+
+    const action = habit.points < 0 ? "cost" : "earn";
+    return `This action will ${action} you ${habit.points} points.`;
+  };
+
+  function getSubmitButtonText() {
+    if (createPost.isPending) return "Submitting...";
+
+    if (
+      habitId !== "0" &&
+      userHabits?.[habitId]?.points !== undefined &&
+      userHabits?.[habitId] !== undefined
+    ) {
+      const points = userHabits[habitId]?.points;
+      if (points === undefined) return "Select a habit first";
+      return points > 0
+        ? `Submit to get ${points} points`
+        : `Redeem for ${points * -1} points`;
+    }
+
+    return "Select a habit first";
+  }
 
   return (
     <MagicMotion>
@@ -69,9 +96,10 @@ export function CreatePost({
           </SelectContent>
         </Select>
         <p className="text-sm text-gray-400">
-          {+habitId === 0
-            ? ""
-            : `This action will ${userHabits[+habitId]?.points && userHabits[+habitId]!.points < 0 ? "cost" : "earn"} you ${userHabits[+habitId]?.points} points.`}
+          {getMessage()}
+          {createPost.error && (
+            <span className="text-red-500"> {createPost.error.message}</span>
+          )}
         </p>
         <button
           type="submit"
@@ -85,13 +113,7 @@ export function CreatePost({
           )}
           disabled={createPost.isPending || habitId === "0"}
         >
-          {createPost.isPending
-            ? "Submitting..."
-            : habitId !== "0" && userHabits?.[habitId]?.points !== undefined
-              ? userHabits?.[habitId]?.points! > 0
-                ? `Submit to get ${userHabits[habitId]?.points} points`
-                : `Redeem for ${userHabits[habitId]?.points! * -1} points`
-              : "Select a habit first"}
+          {getSubmitButtonText()}
         </button>
       </form>
     </MagicMotion>
