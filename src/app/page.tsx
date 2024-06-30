@@ -69,7 +69,8 @@ async function CrudShowcase() {
   const earnedActions = Object.values(userHabits)
     .filter((el) => el.points <= 0 && Math.abs(el.points) <= points)
     .reduce((acc, el) => `${acc} ${el.name};;`, "")
-    .split(";;");
+    .split(";;")
+    .filter((el) => el);
   return (
     <div className="flex w-full max-w-2xl flex-col gap-8">
       <div className="flex flex-col justify-center gap-4 rounded-xl bg-white bg-opacity-5 p-6">
@@ -86,7 +87,7 @@ async function CrudShowcase() {
         ) : (
           <p>You have no points yet.</p>
         )}
-        {earnedActions ? (
+        {earnedActions.length > 0 ? (
           <ul className="text-xl font-semibold">
             You can{" "}
             {earnedActions.map(
