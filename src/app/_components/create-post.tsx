@@ -62,8 +62,8 @@ export function CreatePost({
               Select a Habit
             </SelectItem>
             {Object.entries(userHabits).map(([id, habit]) => (
-              <SelectItem value={`${habit.id}`}>
-                {habit.name} {id}
+              <SelectItem value={`${habit.id}`} key={id}>
+                {habit.name}
               </SelectItem>
             ))}
           </SelectContent>
