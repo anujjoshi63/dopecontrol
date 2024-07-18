@@ -4,13 +4,14 @@ import { api } from "@/trpc/server";
 import clsx from "clsx";
 import ProfilePicture from "./_components/ProfilePicture";
 import SignInWithGoogleButton from "./_components/login";
+import Link from "next/link";
 
 export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
   if (!session?.user)
     return (
-      <main className="flex min-h-svh flex-col items-center justify-center gap-4 bg-gradient-to-b from-[hsl(170,56%,20%)] to-[hsl(180,35%,12%)] text-white">
+      <main className="flex min-h-svh flex-col items-center justify-center gap-4">
         <h1 className="flex flex-col justify-center text-5xl font-extrabold tracking-tight sm:text-[2rem]">
           <div>
             Dope <span className="text-[hsl(162,78%,42%)]">Control</span>
@@ -24,7 +25,7 @@ export default async function Home() {
     );
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[hsl(170,56%,20%)] to-[hsl(180,35%,12%)] text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center">
       <div className="container flex flex-1 flex-col items-center justify-start gap-12 px-4 py-6">
         <h1 className="flex w-full justify-between text-5xl font-extrabold tracking-tight sm:text-[2rem]">
           <div></div>
@@ -37,21 +38,9 @@ export default async function Home() {
           />
         </h1>
 
-        <div className="flex flex-col items-center gap-2">
-          {/* <p className="text-2xl text-white">
+        {/* <p className="text-2xl text-white">
             {hello ? hello.greeting : "Loading tRPC query..."}
           </p> */}
-
-          <div className="flex flex-col items-center justify-center gap-4">
-            <p className="text-center text-2xl text-white">
-              {session && (
-                <span>Hello {session.user?.name?.split(" ")[0]}</span>
-              )}{" "}
-              👋
-            </p>
-          </div>
-        </div>
-
         <CrudShowcase />
       </div>
     </main>
@@ -76,7 +65,7 @@ async function CrudShowcase() {
       <div className="flex flex-col justify-center gap-4 rounded-xl bg-white bg-opacity-5 p-6">
         {points ? (
           <p
-            className={clsx("text-2xl font-semibold", {
+            className={clsx("-mt-3 text-2xl font-semibold", {
               "text-rose-500": points < 0,
               "text-emerald-500": points > 0,
               "text-gray-400": points === 0,
@@ -107,9 +96,12 @@ async function CrudShowcase() {
         <div className="flex flex-col justify-center gap-4 rounded-xl bg-white bg-opacity-5 p-6">
           <div className="flex items-center justify-between truncate text-2xl font-semibold">
             Logs
-            <div className="rounded-full bg-white bg-opacity-10 px-3 py-1 text-sm opacity-75">
+            <Link
+              href="/logs"
+              className="rounded-full bg-white bg-opacity-10 px-3 py-1 text-sm opacity-75 transition-all hover:bg-opacity-20 hover:opacity-90"
+            >
               see all
-            </div>
+            </Link>
           </div>
           <div className="flex flex-col gap-2">
             {latestPosts.map((post) => {

@@ -11,14 +11,19 @@ export const metadata = {
 };
 
 export default function RootLayout({
+  logsModal,
   children,
 }: {
+  logsModal: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable} antialiased`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          {logsModal}
+          {children}
+        </TRPCReactProvider>
       </body>
     </html>
   );

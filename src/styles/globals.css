@@ -54,6 +54,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background bg-gradient-to-b from-[hsl(170,56%,20%)] to-[hsl(180,35%,12%)] text-white;
   }
 }
