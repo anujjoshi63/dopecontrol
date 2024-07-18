@@ -108,7 +108,7 @@ export function CreatePost({
             {
               "text-white hover:bg-white/20":
                 !createPost.isPending && habitId !== "0",
-              "text-gray-400": createPost.isPending || habitId === "0",
+              "text-gray-400 cursor-not-allowed": createPost.isPending || habitId === "0",
             },
           )}
           disabled={createPost.isPending || habitId === "0"}
