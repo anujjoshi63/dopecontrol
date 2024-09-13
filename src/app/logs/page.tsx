@@ -8,7 +8,6 @@ export default async function LogsPage() {
   const session = await getServerAuthSession();
 
   if (!session?.user) redirect("/"); //redirect to home page if user is not logged in
-
   const logs = await api.post.getPosts({ offset: 1 });
   const habits = await api.habit.getHabits();
   return (
