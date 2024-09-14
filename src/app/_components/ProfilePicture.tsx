@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -22,9 +21,11 @@ const ProfilePicture = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar>
+        <Avatar className="transition-all">
           <AvatarImage src={imageURL} />
-          <AvatarFallback>👤</AvatarFallback>
+          <AvatarFallback className="animate-pulse bg-transparent">
+            👤
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
