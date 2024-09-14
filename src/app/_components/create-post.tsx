@@ -98,7 +98,7 @@ export function CreatePost({
         <p className="text-sm text-gray-400">
           {getMessage()}
           {createPost.error && (
-            <span className="text-red-500"> {createPost.error.message}</span>
+            <span className="text-rose-400"> {createPost.error.message}</span>
           )}
         </p>
         <button
@@ -108,7 +108,8 @@ export function CreatePost({
             {
               "text-white hover:bg-white/20":
                 !createPost.isPending && habitId !== "0",
-              "text-gray-400 cursor-not-allowed": createPost.isPending || habitId === "0",
+              "cursor-not-allowed text-gray-400":
+                createPost.isPending || habitId === "0",
             },
           )}
           disabled={createPost.isPending || habitId === "0"}
