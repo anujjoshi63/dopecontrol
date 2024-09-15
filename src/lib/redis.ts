@@ -10,7 +10,7 @@ const getPointsForUserFromCache = async (
   userId: string,
 ): Promise<number | null> => {
   const cacheKey = `summary:user:${userId}:posts:points_sum`;
-  const cachedData = (await redis.get(cacheKey)) as string | null;
+  const cachedData: string | null = await redis.get(cacheKey);
   return cachedData ? parseInt(cachedData, 10) : null;
 };
 
