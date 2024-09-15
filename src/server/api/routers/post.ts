@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { getPointsForUserFromCache } from "@/lib/redis";
+import { getPointsForUserFromCache, redis } from "@/lib/redis";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -8,7 +8,6 @@ import {
 } from "@/server/api/trpc";
 import { posts } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
-import { fetchAndCachePoints } from "../utils";
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
@@ -43,7 +42,23 @@ export const postRouter = createTRPCRouter({
       // Try to fetch the cached sum of points from Redis
       let points = await getPointsForUserFromCache(userId);
       if (points === null) {
-        points = await fetchAndCachePoints(userId, ctx.db.query.posts.findMany);
+        const cacheKey = `summary:user:${userId}:posts:points_sum`;
+
+        const fetchedPosts = await ctx.db.query.posts.findMany({
+          columns: {},
+          with: {
+            habit: {
+              columns: {
+                points: true,
+              },
+            },
+          },
+          where: eq(posts.createdById, userId),
+        });
+
+        points = fetchedPosts.reduce((sum, post) => sum + post.habit.points, 0);
+
+        await redis.set(cacheKey, points.toString(), { ex: 3600 }); // Cache for 1 hour
       }
       return { points };
     } catch (error) {

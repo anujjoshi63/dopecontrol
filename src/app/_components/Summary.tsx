@@ -2,11 +2,22 @@ import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
 import clsx from "clsx";
 
-const Summary = async () => {
+const Summary = async ({
+  userHabits,
+}: {
+  userHabits: Record<
+    string,
+    {
+      id: number;
+      createdById: string;
+      name: string;
+      points: number;
+    }
+  >;
+}) => {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
 
-  const userHabits = await api.habit.getHabits();
   const { points } = await api.post.getPoints();
   const earnedActions = Object.values(userHabits)
     .filter((el) => el.points <= 0 && Math.abs(el.points) <= points)
