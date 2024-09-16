@@ -22,11 +22,31 @@ export const postRouter = createTRPCRouter({
     .input(z.object({ habitId: z.number().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const { habitId } = input;
-
+      const { id: userId } = ctx.session.user;
       await ctx.db.insert(posts).values({
         habitId,
-        createdById: ctx.session.user.id,
+        createdById: userId,
       });
+      const cacheKey = `summary:user:${userId}:posts:points_sum`;
+
+      const fetchedPosts = await ctx.db.query.posts.findMany({
+        columns: {},
+        with: {
+          habit: {
+            columns: {
+              points: true,
+            },
+          },
+        },
+        where: eq(posts.createdById, userId),
+      });
+
+      let points = fetchedPosts.reduce(
+        (sum, post) => sum + post.habit.points,
+        0,
+      );
+
+      await redis.set(cacheKey, points.toString(), { ex: 3600 });
     }),
 
   getLatest: protectedProcedure.query(({ ctx }) => {
