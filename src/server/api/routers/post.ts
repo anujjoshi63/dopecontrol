@@ -41,7 +41,7 @@ export const postRouter = createTRPCRouter({
         where: eq(posts.createdById, userId),
       });
 
-      let points = fetchedPosts.reduce(
+      const points = fetchedPosts.reduce(
         (sum, post) => sum + post.habit.points,
         0,
       );
