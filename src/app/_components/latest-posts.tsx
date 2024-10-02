@@ -48,7 +48,7 @@ function LatestPosts({
           ? Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={index}
-                className="flex h-16 w-full animate-pulse flex-col justify-evenly gap-2 rounded-xl bg-white bg-opacity-5 p-4"
+                className="flex h-16 w-full animate-pulse flex-col justify-evenly gap-2 rounded-xl bg-white bg-opacity-5 p-4 duration-1000"
               >
                 <div className="flex justify-between">
                   <Skeleton className="h-3 w-[15ch] rounded-full opacity-50" />
