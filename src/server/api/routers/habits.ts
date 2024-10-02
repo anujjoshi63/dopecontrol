@@ -54,11 +54,11 @@ const templateHabits = [
     points: 100,
   },
   {
-    name: "Smoke 🌿🚬",
+    name: "Smoke 🚬",
     points: -150,
   },
   {
-    name: "Me time 🍆",
+    name: "Me time",
     points: -200,
   },
   {
