@@ -26,10 +26,10 @@ const loading = () => {
           <div className="flex h-full w-full flex-grow flex-col gap-2 overflow-y-auto">
             {Array(5)
               .fill(5)
-              .map((el) => {
+              .map((_, index: number) => {
                 return (
                   <Skeleton
-                    key={el}
+                    key={index}
                     className="h-16 w-full rounded-xl bg-white bg-opacity-5 px-4 py-3 duration-1000"
                   ></Skeleton>
                 );
