@@ -3,18 +3,17 @@ import { api } from "@/trpc/server";
 import NumberFlow from "@number-flow/react";
 import clsx from "clsx";
 
+interface UserHabit {
+  id: number;
+  createdById: string;
+  name: string;
+  points: number;
+}
+
 const Summary = async ({
   userHabits,
 }: {
-  userHabits: Record<
-    string,
-    {
-      id: number;
-      createdById: string;
-      name: string;
-      points: number;
-    }
-  >;
+  userHabits: Record<string, UserHabit>;
 }) => {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
