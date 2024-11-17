@@ -1,5 +1,6 @@
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
+import NumberFlow from "@number-flow/react";
 import clsx from "clsx";
 
 const Summary = async ({
@@ -34,7 +35,7 @@ const Summary = async ({
             "text-gray-400": points === 0,
           })}
         >
-          {points} points
+          <NumberFlow value={points} /> points
         </p>
       ) : (
         <p>You have no points yet.</p>

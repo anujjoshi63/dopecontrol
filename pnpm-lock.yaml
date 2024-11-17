@@ -11,6 +11,9 @@ importers:
       '@auth/drizzle-adapter':
         specifier: 1.4.1
         version: 1.4.1
+      '@number-flow/react':
+        specifier: ^0.3.3
+        version: 0.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-avatar':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -611,6 +614,12 @@ packages:
   '@nolyfill/is-core-module@1.0.39':
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
+
+  '@number-flow/react@0.3.3':
+    resolution: {integrity: sha512-Xy1RaPemCdrK4vdHMNH9fL4+5egOG4CORkQ4ymrHzd0Bf0YCcRJgYiCj9sYz2kLOZfUh+DwWcVsyz1joSHHq3g==}
+    peerDependencies:
+      react: ^18 || ^19.0.0-rc-915b914b3a-20240515
+      react-dom: ^18
 
   '@panva/hkdf@1.2.1':
     resolution: {integrity: sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==}
@@ -2362,6 +2371,9 @@ packages:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
 
+  number-flow@0.3.8:
+    resolution: {integrity: sha512-pM2cXBQSiQIFZEpM3HLnU7nuPSrjR37L8XdB2NWohZg+jghT1wB7eLoVX0JFVrzlv/mE/g+MmIrcYa1SAo+bOA==}
+
   oauth4webapi@2.17.0:
     resolution: {integrity: sha512-lbC0Z7uzAFNFyzEYRIC+pkSVvDHJTbEW+dYlSBAlCYDe6RxUkJ26bClhk8ocBZip1wfI9uKTe0fm4Ib4RHn6uQ==}
 
@@ -3515,6 +3527,12 @@ snapshots:
       fastq: 1.17.1
 
   '@nolyfill/is-core-module@1.0.39': {}
+
+  '@number-flow/react@0.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      number-flow: 0.3.8
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@panva/hkdf@1.2.1': {}
 
@@ -5530,6 +5548,8 @@ snapshots:
       - babel-plugin-macros
 
   normalize-path@3.0.0: {}
+
+  number-flow@0.3.8: {}
 
   oauth4webapi@2.17.0: {}
 
