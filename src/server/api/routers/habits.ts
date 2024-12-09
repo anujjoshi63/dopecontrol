@@ -109,6 +109,11 @@ export const habitRouter = createTRPCRouter({
     // map id with other data
     const allHabits = await ctx.db.query.habits.findMany({
       where: eq(habits.createdById, ctx.session.user.id),
+      columns: {
+        id: true,
+        name: true,
+        points: true,
+      },
     });
     const habitIdToHabit = allHabits.reduce(
       (acc: Record<string, typeof habit>, habit) => {
