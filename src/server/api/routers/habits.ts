@@ -85,20 +85,22 @@ export const habitRouter = createTRPCRouter({
     }),
 
   checkTemplateHabits: protectedProcedure.mutation(async ({ ctx }) => {
-    const existingHabits = await ctx.db.query.habits.findMany({
-      where: eq(habits.createdById, ctx.session.user.id),
+    const userId = ctx.session.user.id;
+    const existingHabitsCheck = await ctx.db.query.habits.findFirst({
+      where: eq(habits.createdById, userId),
+      columns: {
+        id: true,
+      },
     });
-    if (existingHabits.length > 0) {
+    if (existingHabitsCheck) {
       return { ok: true };
     }
-    const toInsert: (typeof habits.$inferInsert)[] = templateHabits.map(
-      (habit) => {
-        return {
-          ...habit,
-          createdById: ctx.session.user.id,
-        };
-      },
-    );
+    
+    const toInsert = templateHabits.map((habit) => ({
+      ...habit,
+      createdById: userId,
+    }));
+
     await ctx.db.insert(habits).values(toInsert);
 
     return { ok: true };
