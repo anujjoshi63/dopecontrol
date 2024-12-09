@@ -99,6 +99,11 @@ export const postRouter = createTRPCRouter({
         offset: offset ? (offset - 1) * pageSize : 0,
         // limit: pageSize,
         where: eq(posts.createdById, ctx.session.user.id),
+        columns: {
+          createdAt: true,
+          id: true,
+          habitId: true,
+        },
       });
 
       return fetchedPosts;
