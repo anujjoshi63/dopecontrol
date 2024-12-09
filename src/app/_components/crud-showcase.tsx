@@ -9,7 +9,6 @@ export default function CrudShowcase({
     string,
     {
       id: number;
-      createdById: string;
       name: string;
       points: number;
     }

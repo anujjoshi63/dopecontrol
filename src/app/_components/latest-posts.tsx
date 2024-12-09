@@ -12,7 +12,6 @@ function LatestPosts({
     string,
     {
       id: number;
-      createdById: string;
       name: string;
       points: number;
     }

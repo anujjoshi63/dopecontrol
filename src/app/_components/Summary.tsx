@@ -5,7 +5,6 @@ import clsx from "clsx";
 
 interface UserHabit {
   id: number;
-  createdById: string;
   name: string;
   points: number;
 }
