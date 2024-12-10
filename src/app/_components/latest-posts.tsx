@@ -4,6 +4,7 @@ import { api } from "@/trpc/react"; // Adjust import to client-side usage
 import clsx from "clsx";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { MagicMotion } from "react-magic-motion";
 
 function LatestPosts({
   userHabits,
@@ -42,51 +43,62 @@ function LatestPosts({
           see all
         </Link>
       </div>
-      <div className="flex flex-col gap-2">
-        {isLoading
-          ? Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={index}
-                className="flex h-16 w-full animate-pulse flex-col justify-evenly gap-2 rounded-xl bg-white bg-opacity-5 p-4 duration-1000"
-              >
-                <div className="flex justify-between">
-                  <Skeleton className="h-3 w-[15ch] rounded-full opacity-50" />
-                  <Skeleton className="h-3 w-[6ch] rounded-full opacity-50" />
-                </div>
-                <div>
-                  <Skeleton className="h-3 w-[10ch] rounded-full opacity-50" />
-                </div>
-              </div>
-            ))
-          : latestPosts?.map((post) => {
-              const habit = userHabits?.[post.habitId];
-              if (!habit) return null;
-              const pointsDisplay =
-                habit?.points > 0 ? `+${habit.points}` : habit?.points;
-
-              return (
+      <MagicMotion
+        transition={{
+          duration: 0.7,
+          type: "tween",
+          ease: "circInOut",
+          delay: 0.1,
+        }}
+      >
+        <div className="flex flex-col gap-2">
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, index) => (
                 <div
-                  className={clsx(
-                    "h-16 w-full rounded-xl bg-white bg-opacity-5 px-4 py-3 transition-opacity duration-300",
-                    {
-                      "opacity-100": hasLoaded,
-                      "opacity-5": !hasLoaded,
-                    },
-                  )}
-                  style={{
-                    transitionTimingFunction: "cubic-bezier(.21,.58,.69,.66)",
-                  }}
-                  key={post.id}
+                  key={index}
+                  className="flex h-16 w-full animate-pulse flex-col justify-evenly gap-2 rounded-xl bg-[#2c544e] p-4 duration-1000"
                 >
                   <div className="flex justify-between">
-                    <div>{habit?.name}</div>
-                    <div>{pointsDisplay}</div>
+                    <Skeleton className="h-3 w-[15ch] rounded-full opacity-50" />
+                    <Skeleton className="h-3 w-[6ch] rounded-full opacity-50" />
                   </div>
-                  <div>{new Date(post.createdAt).toDateString()}</div>
+                  <div>
+                    <Skeleton className="h-3 w-[10ch] rounded-full opacity-50" />
+                  </div>
                 </div>
-              );
-            })}
-      </div>
+              ))
+            : latestPosts?.map((post) => {
+                const habit = userHabits?.[post.habitId];
+                if (!habit) return null;
+                const pointsDisplay =
+                  habit?.points > 0 ? `+${habit.points}` : habit?.points;
+
+                return (
+                  <div
+                    className={clsx(
+                      "flex h-16 w-full rounded-xl bg-[#2c544e] px-4 py-3 transition-opacity duration-300",
+                      {
+                        "opacity-100": hasLoaded,
+                        "opacity-5": !hasLoaded,
+                      },
+                    )}
+                    style={{
+                      transitionTimingFunction: "cubic-bezier(.21,.58,.69,.66)",
+                    }}
+                    key={post.id}
+                  >
+                    <div className="flex flex-1 flex-col justify-between py-0">
+                      <div>{habit?.name}</div>
+                      <div>{new Date(post.createdAt).toDateString()}</div>
+                    </div>
+                    <div className="flex h-full items-center justify-center text-xl font-medium">
+                      {pointsDisplay}
+                    </div>
+                  </div>
+                );
+              })}
+        </div>
+      </MagicMotion>
     </div>
   );
 }
