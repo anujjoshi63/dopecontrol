@@ -31,8 +31,10 @@ export function CreatePost({
   const [habitId, setHabitId] = useState("0");
   const utils = api.useUtils();
   const createPost = api.post.create.useMutation({
-    onSuccess: () => {
-      utils.post.getLatest.invalidate();
+    onSuccess: async () => {
+      utils.post.getLatest.invalidate().catch((err) => {
+        console.error(err);
+      });
       router.refresh();
       setHabitId("0");
     },
