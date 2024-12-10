@@ -45,10 +45,10 @@ function LatestPosts({
       </div>
       <MagicMotion
         transition={{
-          duration: 0.7,
+          duration: 0.75,
           type: "tween",
           ease: "circInOut",
-          delay: 0.1,
+          delay: 0.25,
         }}
       >
         <div className="flex flex-col gap-2">
