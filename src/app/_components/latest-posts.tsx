@@ -76,7 +76,7 @@ function LatestPosts({
                 return (
                   <div
                     className={clsx(
-                      "flex h-16 w-full rounded-xl bg-[#2c544e] px-4 py-3 transition-opacity duration-300",
+                      "flex h-16 w-full rounded-xl bg-[#2c544e] px-4 py-2 transition-opacity duration-300",
                       {
                         "opacity-100": hasLoaded,
                         "opacity-5": !hasLoaded,
