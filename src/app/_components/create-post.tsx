@@ -29,9 +29,10 @@ export function CreatePost({
 }) {
   const router = useRouter();
   const [habitId, setHabitId] = useState("0");
-
+  const utils = api.useUtils();
   const createPost = api.post.create.useMutation({
     onSuccess: () => {
+      utils.post.getLatest.invalidate();
       router.refresh();
       setHabitId("0");
     },
