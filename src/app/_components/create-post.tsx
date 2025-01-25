@@ -74,7 +74,7 @@ export function CreatePost({
           e.preventDefault();
           createPost.mutate({ habitId: Number(habitId) });
         }}
-        className="flex flex-col gap-4 bg-white bg-opacity-5 p-6 rounded-xl"
+        className="flex flex-col gap-4 rounded-xl bg-white bg-opacity-5 p-6"
       >
         <p className="truncate text-2xl font-semibold">Quick Add Habit</p>
         <Select
@@ -83,15 +83,15 @@ export function CreatePost({
             setHabitId(value);
           }}
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a Habit" />
+          <SelectTrigger className="w-full rounded-lg py-6">
+            <SelectValue placeholder="Select a habit to track" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={"0"} disabled hidden>
               Select a Habit
             </SelectItem>
             {Object.entries(userHabits).map(([id, habit]) => (
-              <SelectItem value={`${habit.id}`} key={id}>
+              <SelectItem value={`${habit.id}`} key={id} className="my-1 py-2">
                 {habit.name}
               </SelectItem>
             ))}
