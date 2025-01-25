@@ -1,4 +1,4 @@
-import Summary from "../_components/Summary";
+import Summary from "@/app/_components/Summary";
 import LatestPosts from "../_components/latest-posts";
 import { CreatePost } from "./create-post";
 
