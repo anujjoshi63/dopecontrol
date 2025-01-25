@@ -71,14 +71,11 @@ function LatestPosts({
             : latestPosts?.map((post) => {
                 const habit = userHabits?.[post.habitId];
                 if (!habit) return null;
-                const pointsDisplay =
-                  habit?.points > 0
-                    ? `${habit.points}`
-                    : `(${Math.abs(habit.points)})`;
+
                 const iconClass =
                   habit?.points > 0
-                    ? "text-emerald-500 h-6 w-6"
-                    : "text-rose-400 h-6 w-6 rotate-180";
+                    ? "text-emerald-500 h-4 w-4"
+                    : "text-rose-400 h-4 w-4 rotate-180";
                 return (
                   <div
                     className={clsx(
@@ -99,9 +96,9 @@ function LatestPosts({
                         {new Date(post.createdAt).toDateString()}
                       </div>
                     </div>
-                    <div className="flex items-center justify-center text-xl font-medium">
-                      {pointsDisplay}
-                      <ArrowUpIcon className={iconClass} strokeWidth={2} />
+                    <div className="flex items-center justify-center gap-2 text-xl font-medium">
+                      <ArrowUpIcon className={iconClass} />
+                      {Math.abs(habit.points)}
                     </div>
                   </div>
                 );

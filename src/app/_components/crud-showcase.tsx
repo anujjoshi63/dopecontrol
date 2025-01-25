@@ -17,8 +17,8 @@ export default function CrudShowcase({
   return (
     <div className="flex w-full max-w-2xl flex-col gap-8">
       <Summary userHabits={userHabits} />
-      <LatestPosts userHabits={userHabits} />
       <CreatePost userHabits={userHabits} />
+      <LatestPosts userHabits={userHabits} />
     </div>
   );
 }

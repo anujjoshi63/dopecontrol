@@ -74,9 +74,9 @@ export function CreatePost({
           e.preventDefault();
           createPost.mutate({ habitId: Number(habitId) });
         }}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 bg-white bg-opacity-5 p-6 rounded-xl"
       >
-        <p className="truncate text-2xl font-semibold">Record an action</p>
+        <p className="truncate text-2xl font-semibold">Quick Add Habit</p>
         <Select
           value={habitId}
           onValueChange={(value) => {

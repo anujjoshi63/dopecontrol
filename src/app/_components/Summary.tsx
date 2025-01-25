@@ -24,10 +24,10 @@ const Summary = async ({
     .split(";;")
     .filter((el) => el);
   return (
-    <div className="flex flex-col justify-center gap-4 rounded-xl bg-white bg-opacity-5 p-6">
+    <div className="flex flex-col justify-center gap-2 rounded-xl bg-white bg-opacity-5 p-6">
       {points ? (
         <p
-          className={clsx("-mt-3 text-3xl font-medium", {
+          className={clsx("text-2xl font-medium", {
             "text-rose-400": points < 0,
             "text-emerald-500": points > 0,
             "text-gray-400": points === 0,
@@ -51,11 +51,14 @@ const Summary = async ({
           )}
         </ul>
       ) : (
-        <p className="text-white/70">
-          You haven't worked enough to have fun yet.
-          <br />
-          Start by working on some productive or self-improvement habits.
-        </p>
+        <>
+          <p className="text-white/70">
+            You haven't worked enough to have fun yet.
+          </p>
+          <p className="text-white/70">
+            Start by working on some productive or self-improvement habits.
+          </p>
+        </>
       )}
     </div>
   );
