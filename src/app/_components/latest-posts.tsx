@@ -1,6 +1,7 @@
 "use client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/trpc/react"; // Adjust import to client-side usage
+import { ArrowUpIcon, CircleIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -34,11 +35,11 @@ function LatestPosts({
 
   return (
     <div className="flex flex-col justify-center gap-4 rounded-xl bg-white bg-opacity-5 p-6">
-      <div className="flex items-center justify-between truncate text-2xl font-semibold">
+      <div className="flex items-center justify-between truncate text-lg font-semibold">
         Logs
         <Link
           href="/logs"
-          className="rounded-full bg-white bg-opacity-10 px-3 py-1 text-sm opacity-75 transition-all hover:bg-opacity-20 hover:opacity-90"
+          className="rounded-full bg-white bg-opacity-10 px-4 py-1 text-sm opacity-75 transition-all hover:bg-opacity-20 hover:opacity-90"
         >
           see all
         </Link>
@@ -93,6 +94,13 @@ function LatestPosts({
                     </div>
                     <div className="flex h-full items-center justify-center text-xl font-medium">
                       {pointsDisplay}
+                      {+pointsDisplay > 0 ? (
+                        <ArrowUpIcon className="h-4 w-4" />
+                      ) : +pointsDisplay < 0 ? (
+                        <ArrowUpIcon className="h-4 w-4 rotate-180" />
+                      ) : pointsDisplay === 0 ? (
+                        <CircleIcon className="h-4 w-4 opacity-0" />
+                      ) : null}
                     </div>
                   </div>
                 );
