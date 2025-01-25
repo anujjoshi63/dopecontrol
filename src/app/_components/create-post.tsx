@@ -76,7 +76,7 @@ export function CreatePost({
         }}
         className="flex flex-col gap-4 rounded-xl bg-white bg-opacity-5 p-6"
       >
-        <p className="truncate text-2xl font-semibold">Quick Add Habit</p>
+        <p className="truncate text-xl font-semibold">Quick Add Habit</p>
         <Select
           value={habitId}
           onValueChange={(value) => {

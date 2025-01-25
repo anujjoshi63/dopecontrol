@@ -35,7 +35,7 @@ function LatestPosts({
 
   return (
     <div className="flex flex-col justify-center gap-4 rounded-xl bg-white bg-opacity-5 p-6">
-      <div className="flex items-center justify-between truncate text-lg font-semibold">
+      <div className="flex items-center justify-between truncate text-xl font-semibold">
         Logs
         <Link
           href="/logs"
