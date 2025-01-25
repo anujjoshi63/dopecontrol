@@ -1,7 +1,7 @@
 "use client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/trpc/react"; // Adjust import to client-side usage
-import { ArrowUpIcon, CircleIcon } from "@radix-ui/react-icons";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -72,12 +72,17 @@ function LatestPosts({
                 const habit = userHabits?.[post.habitId];
                 if (!habit) return null;
                 const pointsDisplay =
-                  habit?.points > 0 ? `+${habit.points}` : habit?.points;
-
+                  habit?.points > 0
+                    ? `${habit.points}`
+                    : `(${Math.abs(habit.points)})`;
+                const iconClass =
+                  habit?.points > 0
+                    ? "text-emerald-500 h-6 w-6"
+                    : "text-rose-400 h-6 w-6 rotate-180";
                 return (
                   <div
                     className={clsx(
-                      "flex h-16 w-full rounded-xl bg-[#2c544e] px-4 py-2 transition-opacity duration-300",
+                      "flex h-full w-full rounded-xl bg-[#2c544e] px-4 py-2 transition-opacity duration-300",
                       {
                         "opacity-100": hasLoaded,
                         "opacity-5": !hasLoaded,
@@ -88,19 +93,15 @@ function LatestPosts({
                     }}
                     key={post.id}
                   >
-                    <div className="flex flex-1 flex-col justify-between py-0">
-                      <div>{habit?.name}</div>
-                      <div>{new Date(post.createdAt).toDateString()}</div>
+                    <div className="flex h-full flex-1 flex-col justify-between gap-1 py-0">
+                      <div className="text-base font-normal">{habit?.name}</div>
+                      <div className="font-light">
+                        {new Date(post.createdAt).toDateString()}
+                      </div>
                     </div>
-                    <div className="flex h-full items-center justify-center text-xl font-medium">
+                    <div className="flex items-center justify-center text-xl font-medium">
                       {pointsDisplay}
-                      {+pointsDisplay > 0 ? (
-                        <ArrowUpIcon className="h-4 w-4" />
-                      ) : +pointsDisplay < 0 ? (
-                        <ArrowUpIcon className="h-4 w-4 rotate-180" />
-                      ) : pointsDisplay === 0 ? (
-                        <CircleIcon className="h-4 w-4 opacity-0" />
-                      ) : null}
+                      <ArrowUpIcon className={iconClass} strokeWidth={2} />
                     </div>
                   </div>
                 );
