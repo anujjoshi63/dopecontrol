@@ -99,7 +99,7 @@ export const postRouter = createTRPCRouter({
           id: true,
         },
       });
-      const MAX_POSTS_PER_DAY = 5;
+      const MAX_POSTS_PER_DAY = 30;
       const IGNORE_EMAILS = ["anujjoshi63@gmail.com"];
       if (
         postCount.length >= MAX_POSTS_PER_DAY &&
