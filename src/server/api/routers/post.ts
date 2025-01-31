@@ -9,7 +9,7 @@ import { eq } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { processActivitiesWithAI } from "@/app/api/ai-tool/ai-processing";
 import { TRPCError } from "@trpc/server";
-
+const CACHE_EXPIRY_TIME = 60 * 60; // 1 hour
 async function updatePointsCache(
   userId: string,
   db: PostgresJsDatabase<typeof import("@/server/db/schema")>,
@@ -25,7 +25,7 @@ async function updatePointsCache(
 
   const points = result[0]?.totalPoints ?? 0;
 
-  await redis.set(cacheKey, points.toString(), { ex: 3600 }); // Cache for 1 hour
+  await redis.set(cacheKey, points.toString(), { ex: CACHE_EXPIRY_TIME }); // Cache for 1 hour
   console.log("Updated points cache for user:", userId, "Points:", points);
   return points;
 }
@@ -114,8 +114,24 @@ export const postRouter = createTRPCRouter({
       }
 
       // Process activities with AI
-      const processedActivities = await processActivitiesWithAI(activities);
-
+      let processedActivities = await processActivitiesWithAI(activities);
+      if (processedActivities.length === 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No activities were processed. Please try again.",
+        });
+      }
+      const MAX_ACTIVITIES_PER_POST = 3;
+      if (
+        processedActivities.length > MAX_ACTIVITIES_PER_POST &&
+        email &&
+        !IGNORE_EMAILS.includes(email)
+      ) {
+        processedActivities = processedActivities.slice(
+          0,
+          MAX_ACTIVITIES_PER_POST,
+        );
+      }
       const createdPosts = [];
 
       for (const activity of processedActivities) {
@@ -178,7 +194,7 @@ export const postRouter = createTRPCRouter({
         points = +(result[0]?.totalPoints ?? 0);
 
         // Cache the result
-        await redis.set(cacheKey, points.toString(), { ex: 3600 }); // Cache for 1 hour
+        await redis.set(cacheKey, points.toString(), { ex: CACHE_EXPIRY_TIME }); // Cache for 1 hour
       }
       return { points };
     } catch (error) {

@@ -58,6 +58,7 @@ export function CreatePost() {
               placeholder="What have you been up to? Describe your activities..."
               className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
               rows={4}
+              maxLength={500}
             />
             <Button
               type="submit"

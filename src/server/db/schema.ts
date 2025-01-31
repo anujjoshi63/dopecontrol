@@ -19,28 +19,54 @@ import type { AdapterAccount } from "next-auth/adapters";
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `dopecontrol_${name}`);
-export const posts = createTable("post", {
-  id: serial("id").primaryKey(),
-  createdById: varchar("createdById", { length: 255 })
-    .notNull()
-    .references(() => users.id),
-  habitId: integer("habitId")
-    .notNull()
-    .references(() => habits.id),
-  description: text("description").notNull(),
-  duration: integer("duration"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const posts = createTable(
+  "post",
+  {
+    id: serial("id").primaryKey(),
+    createdById: varchar("createdById", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    habitId: integer("habitId")
+      .notNull()
+      .references(() => habits.id),
+    description: text("description").notNull(),
+    duration: integer("duration"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (post) => ({
+    // Index for getLatest and getPosts queries which filter by createdById and sort by createdAt
+    createdByIdCreatedAtIdx: index("post_createdById_createdAt_idx").on(
+      post.createdById,
+      post.createdAt,
+    ),
 
-export const habits = createTable("habit", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }).notNull(),
-  userId: varchar("userId", { length: 255 })
-    .notNull()
-    .references(() => users.id),
-  points: integer("points").notNull().default(0),
-  isTemplate: boolean("isTemplate").notNull().default(false),
-});
+    // Index for joining posts with habits
+    habitIdIdx: index("post_habitId_idx").on(post.habitId),
+
+    // Index for filtering posts by date (for daily post limit check)
+    createdAtIdx: index("post_createdAt_idx").on(post.createdAt),
+  }),
+);
+
+export const habits = createTable(
+  "habit",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    points: integer("points").notNull().default(0),
+    isTemplate: boolean("isTemplate").notNull().default(false),
+  },
+  (habit) => ({
+    // Index for looking up habits by name (used in createFromAIInput)
+    nameIdx: index("habit_name_idx").on(habit.name),
+
+    // Index for filtering habits by userId
+    userIdIdx: index("habit_userId_idx").on(habit.userId),
+  }),
+);
 
 export const postsRelations = relations(posts, ({ one }) => ({
   habit: one(habits, { fields: [posts.habitId], references: [habits.id] }),
