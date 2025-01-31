@@ -5,7 +5,7 @@ import { CreatePost } from "./create-post";
 export default function CrudShowcase({
   userHabits,
 }: {
-  userHabits: Record<
+  userHabits?: Record<
     string,
     {
       id: number;
@@ -16,9 +16,9 @@ export default function CrudShowcase({
 }) {
   return (
     <div className="flex w-full max-w-2xl flex-col gap-8">
-      <Summary userHabits={userHabits} />
-      <CreatePost userHabits={userHabits} />
-      <LatestPosts userHabits={userHabits} />
+      <Summary />
+      <CreatePost />
+      <LatestPosts />
     </div>
   );
 }

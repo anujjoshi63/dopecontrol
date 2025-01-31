@@ -1,124 +1,74 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { api } from "@/trpc/react";
-import clsx from "clsx";
+import { useRouter } from "next/navigation";
 import { MagicMotion } from "react-magic-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-export function CreatePost({
-  userHabits,
-}: {
-  userHabits: Record<
-    string,
-    {
-      id: number;
-      name: string;
-      points: number;
-    }
-  >;
-}) {
+export function CreatePost() {
   const router = useRouter();
-  const [habitId, setHabitId] = useState("0");
+  const [activities, setActivities] = useState("");
   const utils = api.useUtils();
-  const createPost = api.post.create.useMutation({
+  const { toast } = useToast();
+
+  const createPost = api.post.createFromAIInput.useMutation({
     onSuccess: async () => {
-      utils.post.getLatest.invalidate().catch((err) => {
-        console.error(err);
-      });
+      await Promise.all([
+        utils.post.getLatest.invalidate(),
+        utils.post.getPoints.invalidate(),
+      ]);
       router.refresh();
-      setHabitId("0");
+      setActivities("");
+      toast({
+        title: "Activities logged",
+        description: "Your activities have been processed and logged.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     },
   });
-  const getMessage = () => {
-    if (+habitId === 0) return "";
 
-    const habit = userHabits[+habitId];
-    if (habit?.points === undefined) return "";
-
-    const action = habit.points < 0 ? "cost" : "earn";
-    return `This action will ${action} you ${habit.points} points.`;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createPost.mutate({ activities });
   };
-
-  function getSubmitButtonText() {
-    if (createPost.isPending) return "Submitting...";
-
-    if (
-      habitId !== "0" &&
-      userHabits?.[habitId]?.points !== undefined &&
-      userHabits?.[habitId] !== undefined
-    ) {
-      const points = userHabits[habitId]?.points;
-      if (points === undefined) return "Select a habit first";
-      return points > 0
-        ? `Submit to get ${points} points`
-        : `Redeem for ${points * -1} points`;
-    }
-
-    return "Select a habit first";
-  }
 
   return (
     <MagicMotion>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          createPost.mutate({ habitId: Number(habitId) });
-        }}
-        className="flex flex-col gap-4 rounded-xl bg-white bg-opacity-5 p-6"
-      >
-        <p className="truncate text-xl font-semibold">Quick Add Habit</p>
-        <Select
-          value={habitId}
-          onValueChange={(value) => {
-            setHabitId(value);
-          }}
-        >
-          <SelectTrigger className="w-full rounded-lg py-6">
-            <SelectValue placeholder="Select a habit to track" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={"0"} disabled hidden>
-              Select a Habit
-            </SelectItem>
-            {Object.entries(userHabits).map(([id, habit]) => (
-              <SelectItem value={`${habit.id}`} key={id} className="my-1 py-2">
-                {habit.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <p className="text-sm text-gray-400">
-          {getMessage()}
-          {createPost.error && (
-            <span className="text-rose-400"> {createPost.error.message}</span>
-          )}
-        </p>
-        <button
-          type="submit"
-          className={clsx(
-            "rounded-full bg-white/10 px-10 py-3 font-semibold transition",
-            {
-              "text-white hover:bg-white/20":
-                !createPost.isPending && habitId !== "0",
-              "cursor-not-allowed text-gray-400":
-                createPost.isPending || habitId === "0",
-            },
-          )}
-          disabled={createPost.isPending || habitId === "0"}
-        >
-          {getSubmitButtonText()}
-        </button>
-      </form>
+      <Card className="border-white/10 bg-white/5 shadow-lg backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="tracking-tighter text-white/90">
+            Log Your Activities
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Textarea
+              value={activities}
+              onChange={(e) => setActivities(e.target.value)}
+              placeholder="What have you been up to? Describe your activities..."
+              className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
+              rows={4}
+            />
+            <Button
+              type="submit"
+              className="w-full bg-white/10 text-white hover:bg-white/20"
+              disabled={createPost.isPending || !activities.trim()}
+            >
+              {createPost.isPending ? "Processing..." : "Submit Activities"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </MagicMotion>
   );
 }

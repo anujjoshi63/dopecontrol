@@ -1,112 +1,78 @@
 "use client";
+
+import { api } from "@/trpc/react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { api } from "@/trpc/react"; // Adjust import to client-side usage
-import { ArrowUpIcon } from "@radix-ui/react-icons";
+import { ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 import clsx from "clsx";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { MagicMotion } from "react-magic-motion";
+import { formatDistanceToNow } from "date-fns";
 
-function LatestPosts({
-  userHabits,
-}: {
-  userHabits: Record<
-    string,
-    {
-      id: number;
-      name: string;
-      points: number;
-    }
-  >;
-}) {
+export default function LatestPosts() {
   const { data: latestPosts, isLoading } = api.post.getLatest.useQuery();
-  const [hasLoaded, setHasLoaded] = useState(false);
-  useEffect(() => {
-    if (!isLoading) {
-      const timeout = setTimeout(() => {
-        setHasLoaded(true);
-      }, 300); // Adjust the timeout to match the transition duration
-
-      return () => clearTimeout(timeout); // Clean up timeout on component unmount
-    } else {
-      setHasLoaded(false); // Reset state if it goes back to loading
-    }
-  }, [isLoading]);
 
   return (
-    <div className="flex flex-col justify-center gap-4 rounded-xl bg-white bg-opacity-5 p-6">
-      <div className="flex items-center justify-between truncate text-xl font-semibold">
-        Logs
-        <Link
-          href="/logs"
-          className="rounded-full bg-white bg-opacity-10 px-4 py-1 text-sm opacity-75 transition-all hover:bg-opacity-20 hover:opacity-90"
-        >
-          see all
-        </Link>
-      </div>
-      <MagicMotion
-        transition={{
-          duration: 0.75,
-          type: "tween",
-          ease: "circInOut",
-          delay: 0.25,
-        }}
-      >
-        <div className="flex flex-col gap-2">
-          {isLoading
-            ? Array.from({ length: 3 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="flex h-16 w-full animate-pulse flex-col justify-evenly gap-2 rounded-xl bg-[#2c544e] p-4 duration-1000"
-                >
-                  <div className="flex justify-between">
-                    <Skeleton className="h-3 w-[15ch] rounded-full opacity-50" />
-                    <Skeleton className="h-3 w-[6ch] rounded-full opacity-50" />
-                  </div>
-                  <div>
-                    <Skeleton className="h-3 w-[10ch] rounded-full opacity-50" />
-                  </div>
-                </div>
-              ))
-            : latestPosts?.map((post) => {
-                const habit = userHabits?.[post.habitId];
-                if (!habit) return null;
-
-                const iconClass =
-                  habit?.points > 0
-                    ? "text-emerald-500 h-4 w-4"
-                    : "text-rose-400 h-4 w-4 rotate-180";
-                return (
-                  <div
-                    className={clsx(
-                      "flex h-full w-full rounded-xl bg-[#2c544e] px-4 py-2 transition-opacity duration-300",
-                      {
-                        "opacity-100": hasLoaded,
-                        "opacity-5": !hasLoaded,
-                      },
-                    )}
-                    style={{
-                      transitionTimingFunction: "cubic-bezier(.21,.58,.69,.66)",
-                    }}
-                    key={post.id}
-                  >
-                    <div className="flex h-full flex-1 flex-col justify-between gap-1 py-0">
-                      <div className="text-base font-normal">{habit?.name}</div>
-                      <div className="font-light">
-                        {new Date(post.createdAt).toDateString()}
+    <Card className="border-white/10 bg-white/5 shadow-lg backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="tracking-tighter text-white/90">
+          Latest Activities
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="h-fit">
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <Skeleton key={index} className="mb-4 h-24 w-full bg-white/10" />
+            ))
+          ) : latestPosts && latestPosts.length > 0 ? (
+            latestPosts.map((post) => (
+              <Card
+                key={post.id}
+                className="mb-4 overflow-hidden border-white/20 bg-white/10"
+              >
+                <CardContent className="p-0">
+                  <div className="flex items-stretch">
+                    <div
+                      className={clsx(
+                        "w-2",
+                        post.habit.points > 0
+                          ? "bg-emerald-400"
+                          : "bg-rose-400",
+                      )}
+                    />
+                    <div className="flex-grow p-4 py-1">
+                      <div className="flex items-center gap-2 text-lg font-semibold text-white">
+                        {post.habit?.name ?? "Unknown"}
+                        <span className="text-sm text-white/60">
+                          {formatDistanceToNow(new Date(post.createdAt), {
+                            addSuffix: true,
+                          })}
+                        </span>
                       </div>
+                      <p className="mt-1 text-sm text-white/80">
+                        {post?.description ?? "No description"}
+                      </p>
                     </div>
-                    <div className="flex items-center justify-center gap-2 text-xl font-medium">
-                      <ArrowUpIcon className={iconClass} />
-                      {Math.abs(habit.points)}
+                    <div className="flex items-center justify-center bg-white/5 p-4">
+                      {post.habit.points > 0 ? (
+                        <ArrowUpIcon className="h-5 w-5 text-green-400" />
+                      ) : (
+                        <ArrowDownIcon className="h-5 w-5 text-red-400" />
+                      )}
+                      <span className="ml-2 text-xl font-bold text-white">
+                        {Math.abs(post.habit.points)}
+                      </span>
                     </div>
                   </div>
-                );
-              })}
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <p className="py-8 text-center text-white/60">
+              No activities logged yet.
+            </p>
+          )}
         </div>
-      </MagicMotion>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
-
-export default LatestPosts;

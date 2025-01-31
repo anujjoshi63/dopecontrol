@@ -1,5 +1,4 @@
 import { getServerAuthSession } from "@/server/auth";
-import { api } from "@/trpc/server";
 import ProfilePicture from "./_components/ProfilePicture";
 import CrudShowcase from "./_components/crud-showcase";
 import SignInWithGoogleButton from "./_components/login";
@@ -20,8 +19,6 @@ export default async function Home() {
         <SignInWithGoogleButton />
       </main>
     );
-  await api.habit.checkTemplateHabits();
-  const userHabits = await api.habit.getHabits();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
@@ -36,7 +33,7 @@ export default async function Home() {
             name={session.user.name!}
           />
         </h1>
-        <CrudShowcase userHabits={userHabits} />
+        <CrudShowcase />
       </div>
     </main>
   );
