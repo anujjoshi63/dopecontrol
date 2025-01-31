@@ -2,12 +2,13 @@ import { z } from "zod";
 
 import { getPointsForUserFromCache, redis } from "@/lib/redis";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { sum } from "drizzle-orm";
+import { and, gte, sum } from "drizzle-orm";
 
 import { habits, posts } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { processActivitiesWithAI } from "@/app/api/ai-tool/ai-processing";
+import { TRPCError } from "@trpc/server";
 
 async function updatePointsCache(
   userId: string,
@@ -87,6 +88,30 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { activities } = input;
       const userId = ctx.session.user.id;
+      const email = ctx.session.user.email;
+      // Check the number of posts created today
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const postCount = await ctx.db.query.posts.findMany({
+        where: and(eq(posts.createdById, userId), gte(posts.createdAt, today)),
+        columns: {
+          id: true,
+        },
+      });
+      const MAX_POSTS_PER_DAY = 5;
+      const IGNORE_EMAILS = ["anujjoshi63@gmail.com"];
+      if (
+        postCount.length >= MAX_POSTS_PER_DAY &&
+        email &&
+        !IGNORE_EMAILS.includes(email)
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message:
+            "You have reached the daily limit of 5 posts. Please try again tomorrow.",
+        });
+      }
 
       // Process activities with AI
       const processedActivities = await processActivitiesWithAI(activities);
