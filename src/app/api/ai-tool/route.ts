@@ -13,7 +13,10 @@ const processActivitySchema = z.object({
 });
 
 export async function POST(req: Request) {
-  const { activities, userId } = await req.json();
+  const { activities, userId } = (await req.json()) as {
+    activities: string;
+    userId: string;
+  };
 
   const result = await generateText({
     model: openai("gpt-4o-mini"),

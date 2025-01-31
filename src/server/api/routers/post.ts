@@ -6,7 +6,7 @@ import { and, gte, sum } from "drizzle-orm";
 
 import { habits, posts } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { processActivitiesWithAI } from "@/app/api/ai-tool/ai-processing";
 import { TRPCError } from "@trpc/server";
 const CACHE_EXPIRY_TIME = 60 * 60; // 1 hour
