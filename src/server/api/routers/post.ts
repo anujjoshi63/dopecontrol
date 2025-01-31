@@ -7,7 +7,10 @@ import { and, gte, sum } from "drizzle-orm";
 import { habits, posts } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { processActivitiesWithAI } from "@/app/api/ai-tool/ai-processing";
+import {
+  MAX_ACTIVITIES_PER_POST,
+  processActivitiesWithAI,
+} from "@/app/api/ai-tool/ai-processing";
 import { TRPCError } from "@trpc/server";
 const CACHE_EXPIRY_TIME = 60 * 60; // 1 hour
 async function updatePointsCache(
@@ -121,7 +124,6 @@ export const postRouter = createTRPCRouter({
           message: "No activities were processed. Please try again.",
         });
       }
-      const MAX_ACTIVITIES_PER_POST = 3;
       if (
         processedActivities.length > MAX_ACTIVITIES_PER_POST &&
         email &&

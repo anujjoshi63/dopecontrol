@@ -3,6 +3,7 @@
 import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
+export const MAX_ACTIVITIES_PER_POST = 3;
 
 const processedActivitySchema = z.object({
   habitName: z.string(),
@@ -11,11 +12,13 @@ const processedActivitySchema = z.object({
   points: z.number().min(-200).max(100),
 });
 
-const processedActivitiesSchema = z.array(processedActivitySchema);
+const processedActivitiesSchema = z
+  .array(processedActivitySchema)
+  .max(MAX_ACTIVITIES_PER_POST * 2);
 
 export async function processActivitiesWithAI(activities: string) {
   try {
-    const { object } = await generateObject({
+    const { object, usage } = await generateObject({
       model: openai("gpt-4o-mini"),
       schema: z.object({
         activities: processedActivitiesSchema,
@@ -45,7 +48,7 @@ export async function processActivitiesWithAI(activities: string) {
     `,
     });
 
-    console.log({ object });
+    // console.log({ object, usage });
 
     if (!object.activities || object.activities.length === 0) {
       throw new Error("No activities were processed");
