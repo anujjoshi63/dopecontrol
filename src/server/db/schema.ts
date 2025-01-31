@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  boolean,
   index,
   integer,
   pgTableCreator,
@@ -18,43 +19,32 @@ import type { AdapterAccount } from "next-auth/adapters";
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `dopecontrol_${name}`);
-
-export const posts = createTable(
-  "post",
-  {
-    id: serial("id").primaryKey(),
-    // name: varchar("name", { length: 256 }),
-    createdById: varchar("createdById", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt", { withTimezone: true }),
-    habitId: integer("habitId")
-      .notNull()
-      .references(() => habits.id),
-  },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    habitIdIdx: index("habitId_idx").on(example.habitId),
-    // nameIndex: index("name_idx").on(example.name),
-  }),
-);
-
-export const postsRelations = relations(posts, ({ one }) => ({
-  habit: one(habits, { fields: [posts.habitId], references: [habits.id] }),
-  user: one(users, { fields: [posts.createdById], references: [users.id] }),
-}));
+export const posts = createTable("post", {
+  id: serial("id").primaryKey(),
+  createdById: varchar("createdById", { length: 255 })
+    .notNull()
+    .references(() => users.id),
+  habitId: integer("habitId")
+    .notNull()
+    .references(() => habits.id),
+  description: text("description").notNull(),
+  duration: integer("duration"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
 
 export const habits = createTable("habit", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
-  createdById: varchar("createdById", { length: 255 })
+  userId: varchar("userId", { length: 255 })
     .notNull()
     .references(() => users.id),
   points: integer("points").notNull().default(0),
+  isTemplate: boolean("isTemplate").notNull().default(false),
 });
+
+export const postsRelations = relations(posts, ({ one }) => ({
+  habit: one(habits, { fields: [posts.habitId], references: [habits.id] }),
+}));
 
 export const users = createTable("user", {
   id: text("id")
