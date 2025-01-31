@@ -30,20 +30,22 @@ export async function processActivitiesWithAI(activities: string) {
       2. A brief description (max 50 characters)
       3. An estimated duration in minutes (if applicable, otherwise omit)
       4. A point value between -200 and 100
-      
+
       Positive points are for beneficial activities (good for health, career, etc.), 
       negative for detrimental ones (harmful to health, career, etc.).
       Be conservative while awarding points.
       Even if the user provides only one activity, always return an array.
       If duration is not specified or clear, make a reasonable estimate or omit it.
-      
+
       Specific guidelines:
-      - Assign negative points (-20 to -50) for activities like masturbation or excessive indulgence.
+      - Assign heavy negative points (-50 to -100) for cheap dopamine recreational activities such as excessive gaming, social media scrolling, or any activity that provides instant gratification without long-term benefits.
+      - Assign negative points (-50 to -100) for activities like masturbation or excessive indulgence.
       - Treat addictive behaviors or overindulgence in pleasurable activities as negative.
       - Maintain a strict stance on activities that may hinder productivity or self-improvement.
     
       User activities: ${activities}
-      
+
+
       Process these activities and return them in the required format.
     `,
     });
