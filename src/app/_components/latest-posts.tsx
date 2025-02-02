@@ -40,12 +40,15 @@ export default function LatestPosts() {
                       )}
                     />
                     <div className="flex-grow p-4 py-1">
-                      <div className="flex items-center gap-2 text-lg font-semibold text-white">
+                      <div className="flex flex-col-reverse gap-0 text-lg font-semibold text-white md:flex-row md:items-center md:gap-2">
                         {post.habit?.name ?? "Unknown"}
-                        <span className="text-sm text-white/60">
-                          {formatDistanceToNow(new Date(post.createdAt), {
-                            addSuffix: true,
-                          })}
+                        <span className="flex items-center gap-2 text-xs italic text-white/60 md:text-sm md:not-italic">
+                          <span className="hidden md:inline">{"•"}</span>
+                          <span>
+                            {formatDistanceToNow(new Date(post.createdAt), {
+                              addSuffix: true,
+                            })}
+                          </span>
                         </span>
                       </div>
                       <p className="mt-1 text-sm text-white/80">
@@ -58,7 +61,7 @@ export default function LatestPosts() {
                       ) : (
                         <ArrowDownIcon className="h-5 w-5 text-red-400" />
                       )}
-                      <span className="ml-2 text-xl font-bold text-white">
+                      <span className="ml-2 w-[3ch] font-bold text-white md:text-xl">
                         {Math.abs(post.habit.points)}
                       </span>
                     </div>
