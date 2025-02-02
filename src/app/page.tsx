@@ -24,8 +24,8 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center">
       <div className="container flex flex-1 flex-col items-center justify-start gap-12 px-4 py-6">
         <h1 className="flex w-full justify-between text-5xl font-extrabold tracking-tighter sm:text-[2rem]">
-          <div></div>
-          <div className="text-center text-3xl lg:text-4xl">
+          <div className="hidden md:block"></div>
+          <div className="text-3xl lg:text-4xl">
             Dope <span className="text-[hsl(162,78%,42%)]">Control</span>
           </div>
           <ProfilePicture
