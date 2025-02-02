@@ -27,7 +27,7 @@ export async function processActivitiesWithAI(activities: string) {
       You are an AI assistant that processes user activities and categorizes them into habits. 
       For each activity, provide:
       1. A habit name (be specific and concise, max 3 words)
-      2. A brief description (max 50 characters)
+      2. A brief description (max 50 characters, if negative points are awarded, end with 2 or 3 worded recommendation)
       3. An estimated duration in minutes (if applicable, otherwise omit)
       4. A point value between -200 and 100
 
