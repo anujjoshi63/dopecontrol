@@ -21,7 +21,7 @@ export default function LatestPosts() {
         <div className="h-fit">
           {isLoading ? (
             Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton key={index} className="mb-4 h-24 w-full bg-white/10" />
+              <Skeleton key={index} className="mb-4 h-14 w-full bg-white/10" />
             ))
           ) : latestPosts && latestPosts.length > 0 ? (
             latestPosts.map((post) => (
