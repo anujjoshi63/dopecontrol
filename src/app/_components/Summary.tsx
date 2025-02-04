@@ -32,9 +32,9 @@ export default function Summary() {
                 className={clsx(
                   "bg-gradient-to-br bg-clip-text text-4xl font-bold leading-none text-transparent",
                   {
-                    "from-emerald-600 to-green-600": pointsData?.points! > 0,
+                    "from-emerald-600 to-green-600": pointsData.points > 0,
                     "from-rose-400 to-red-400": pointsData.points < 0,
-                    "from-white/90 to-white/50": !pointsData?.points,
+                    "from-white/90 to-white/50": !pointsData.points,
                   },
                 )}
               >
