@@ -18,7 +18,10 @@ const processedActivitiesSchema = z
 
 export async function processActivitiesWithAI(activities: string) {
   try {
-    const { object, usage } = await generateObject({
+    const {
+      object,
+      // , usage
+    } = await generateObject({
       model: openai("gpt-4o-mini"),
       schema: z.object({
         activities: processedActivitiesSchema,
