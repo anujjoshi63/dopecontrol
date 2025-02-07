@@ -1,7 +1,6 @@
-// In @/lib/ai-processing.ts
-
 import { generateObject } from "ai";
-import { openai } from "@ai-sdk/openai";
+// import { openai } from "@ai-sdk/openai";
+import { google } from "@ai-sdk/google";
 import { z } from "zod";
 export const MAX_ACTIVITIES_PER_POST = 3;
 
@@ -15,14 +14,15 @@ const processedActivitySchema = z.object({
 const processedActivitiesSchema = z
   .array(processedActivitySchema)
   .max(MAX_ACTIVITIES_PER_POST * 2);
-
+// const model = openai("gpt-4o-mini");
+const model = google("gemini-2.0-flash-lite-preview-02-05");
 export async function processActivitiesWithAI(activities: string) {
   try {
     const {
       object,
       // , usage
     } = await generateObject({
-      model: openai("gpt-4o-mini"),
+      model,
       schema: z.object({
         activities: processedActivitiesSchema,
       }),
