@@ -53,6 +53,7 @@ export function CreatePost() {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Textarea
+            tabIndex={0}
             value={activities}
             onChange={(e) => setActivities(e.target.value)}
             placeholder="Start typing activities you did so Dope AI can help you track habits and points..."
