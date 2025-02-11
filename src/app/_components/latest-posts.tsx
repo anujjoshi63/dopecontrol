@@ -1,7 +1,13 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowUpIcon, ArrowDownIcon } from "lucide-react";
 import clsx from "clsx";
@@ -16,6 +22,9 @@ export default function LatestPosts() {
         <CardTitle className="tracking-tighter text-white/90">
           Latest Activities
         </CardTitle>
+        <CardDescription className="text-white/60">
+          Activities you logged recently
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="h-fit">
