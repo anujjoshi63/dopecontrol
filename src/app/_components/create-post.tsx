@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -49,6 +55,9 @@ export function CreatePost() {
           Log Your Activities{" "}
           <Sparkles className="h-5 w-5 fill-amber-500 stroke-amber-500" />
         </CardTitle>
+        <CardDescription className="text-white/60">
+          Add your activities and let DopeAI help you
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
