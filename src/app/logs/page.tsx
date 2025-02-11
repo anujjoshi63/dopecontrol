@@ -7,13 +7,14 @@ import ProfilePicture from "../_components/ProfilePicture";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-
+import LogsList from "./_components/LogsList";
 export default async function LogsPage() {
   const session = await getServerAuthSession();
-
   if (!session?.user) redirect("/");
-  const logs = await api.post.getPosts({ offset: 1 });
-  const habits = await api.habit.getHabits();
+  const [logs, habits] = await Promise.all([
+    api.post.getPosts({ offset: 1 }),
+    api.habit.getHabits(),
+  ]);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#165046] to-[hsl(180,35%,12%)]">
@@ -39,36 +40,7 @@ export default async function LogsPage() {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[calc(100vh-16rem)] pr-4">
-              <div className="space-y-4">
-                {logs.map((log) => {
-                  if (!log?.habitId) return null;
-                  const habit = habits[log.habitId];
-                  return (
-                    <Card key={log.id} className="border-white/20 bg-white/10">
-                      <CardContent className="flex items-center justify-between p-4">
-                        <div>
-                          <p className="font-semibold text-white">
-                            {habit?.name}
-                          </p>
-                          <p className="text-sm text-white/60">
-                            {new Date(log.createdAt).toLocaleString()}
-                          </p>
-                        </div>
-                        <div
-                          className={`text-lg font-bold ${
-                            (habit?.points ?? 0) >= 0
-                              ? "text-green-400"
-                              : "text-red-400"
-                          }`}
-                        >
-                          {(habit?.points ?? 0) >= 0 ? "+" : ""}
-                          {habit?.points ?? 0}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
+              <LogsList logs={logs} habits={habits} />
             </ScrollArea>
           </CardContent>
         </Card>
