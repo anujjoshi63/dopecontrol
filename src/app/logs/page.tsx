@@ -39,9 +39,7 @@ export default async function LogsPage() {
             <CardTitle className="text-white/90">Logs</CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[calc(100vh-16rem)] pr-4">
-              <LogsList logs={logs} habits={habits} />
-            </ScrollArea>
+            <LogsList logs={logs} habits={habits} />
           </CardContent>
         </Card>
       </div>

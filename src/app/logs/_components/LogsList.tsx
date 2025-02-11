@@ -1,9 +1,10 @@
 "use client";
 
-import { memo, useCallback, useMemo } from "react";
-import { FixedSizeList as List } from "react-window";
+import { memo, useCallback, useMemo, useRef } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Card, CardContent } from "@/components/ui/card";
-import AutoSizer from "react-virtualized-auto-sizer";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollAreaViewport } from "@radix-ui/react-scroll-area";
 
 type Log = {
   id: number;
@@ -73,33 +74,68 @@ const Row = memo(
 );
 Row.displayName = "Row";
 export default memo(function LogsList({ logs, habits }: LogsListProps) {
-  const itemData = useMemo(() => ({ logs, habits }), [logs, habits]);
+  const parentRef = useRef<HTMLDivElement>(null);
 
-  const renderRow = useCallback(
-    (props: {
-      index: number;
-      style: React.CSSProperties;
-      data: { logs: Log[]; habits: Record<string, Habit> };
-    }) => <Row {...props} data={itemData} />,
-    [itemData],
-  );
+  const virtualizer = useVirtualizer({
+    count: logs.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 100,
+    overscan: 15,
+  });
 
   return (
-    <div style={{ height: "calc(100vh - 16rem)" }}>
-      <AutoSizer>
-        {({ height, width }) => (
-          <List
-            height={height}
-            itemCount={logs.length}
-            itemSize={100}
-            width={width}
-            itemData={itemData}
-            overscanCount={2} // Add overscan for smoother scrolling
-          >
-            {renderRow}
-          </List>
-        )}
-      </AutoSizer>
-    </div>
+    <ScrollArea className="h-[calc(100vh-16rem)] pr-4">
+      <ScrollAreaViewport ref={parentRef}>
+        <div
+          style={{
+            height: `${virtualizer.getTotalSize()}px`,
+            width: "100%",
+            position: "relative",
+          }}
+        >
+          {virtualizer.getVirtualItems().map((virtualRow) => {
+            const log = logs[virtualRow.index];
+            const habit = log?.habitId ? habits[log.habitId] : null;
+            if (!log || !habit) {
+              return null;
+            }
+            return (
+              <div
+                key={log.id}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <Card className="border-white/20 bg-white/10">
+                  <CardContent className="flex items-center justify-between p-4">
+                    <div>
+                      <p className="font-semibold text-white">{habit?.name}</p>
+                      <p className="text-sm text-white/60">
+                        {new Date(log.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                    <div
+                      className={`text-lg font-bold ${
+                        (habit?.points ?? 0) >= 0
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {(habit?.points ?? 0) >= 0 ? "+" : ""}
+                      {habit?.points ?? 0}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            );
+          })}
+        </div>
+      </ScrollAreaViewport>
+    </ScrollArea>
   );
 });
