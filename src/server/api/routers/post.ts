@@ -212,7 +212,7 @@ export const postRouter = createTRPCRouter({
       const pageSize = 8;
 
       // await new Promise((resolve) => setTimeout(resolve, 1000));
-      const fetchedPosts = await ctx.db.query.posts.findMany({
+      return ctx.db.query.posts.findMany({
         orderBy: (posts, { desc }) => [desc(posts.createdAt)],
         offset: offset ? (offset - 1) * pageSize : 0,
         // limit: pageSize,
@@ -223,8 +223,6 @@ export const postRouter = createTRPCRouter({
           habitId: true,
         },
       });
-
-      return fetchedPosts;
     }),
 
   getSecretMessage: protectedProcedure.query(() => {
