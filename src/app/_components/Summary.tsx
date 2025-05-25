@@ -22,8 +22,8 @@ export default function Summary() {
           DopePoints
         </CardTitle>
         <CardDescription className="text-white/60">
-          your total earnings. 100+ means you can have some fun, else you should
-          work harder.
+          100+ means you can have some fun, else stop slacking and consider
+          working harder.
         </CardDescription>
       </CardHeader>
       <CardContent>
