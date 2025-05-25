@@ -36,11 +36,11 @@ export default function Summary() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="flex items-end gap-1"
+              className="flex items-end gap-2"
             >
               <div
                 className={clsx(
-                  "bg-gradient-to-br bg-clip-text text-4xl font-bold leading-none tracking-tighter text-transparent",
+                  "bg-gradient-to-br bg-clip-text px-1 text-4xl font-bold leading-none tracking-tighter text-transparent",
                   {
                     "from-emerald-400 to-green-300": pointsData.points > 0,
                     "from-rose-400 to-red-400": pointsData.points < 0,
