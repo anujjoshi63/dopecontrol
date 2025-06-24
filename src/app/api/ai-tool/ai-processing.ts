@@ -27,29 +27,73 @@ export async function processActivitiesWithAI(activities: string) {
         activities: processedActivitiesSchema,
       }),
       prompt: `
-      You are an AI assistant that processes user activities and categorizes them into habits. 
+      You are an AI assistant that processes user activities and categorizes them into habits with precise scoring.
+
       For each activity, provide:
       1. A habit name (be specific and concise, max 3 words)
       2. A brief description (max 50 characters, if negative points are awarded, end with 2 or 3 worded recommendation)
       3. An estimated duration in minutes (if applicable, otherwise omit)
       4. A point value between -200 and 100
 
-      Positive points are for beneficial activities (good for health, career, etc.), 
-      negative for detrimental ones (harmful to health, career, etc.).
-      Be conservative while awarding points.
+      SCORING FRAMEWORK:
+      
+      HIGHLY POSITIVE (80-100 points):
+      - Intense physical exercise (running, weightlifting, sports)
+      - Deep learning/skill building (coding, language learning, music practice)
+      - Creative work (writing, art, building projects)
+      - Meditation/mindfulness practice
+      
+      MODERATELY POSITIVE (30-79 points):
+      - Light exercise (walking, stretching)
+      - Reading (educational/fiction)
+      - Productive work tasks
+      - Social activities with friends/family
+      - Cooking healthy meals
+      
+      SLIGHTLY POSITIVE (1-29 points):
+      - Organizing/cleaning
+      - Basic self-care (shower, grooming)
+      - Planning/journaling
+      - Casual learning (podcasts, documentaries)
+      
+      NEUTRAL (0 points):
+      - Necessary activities (commuting, waiting)
+      - Ambiguous activities without clear benefit/harm
+      
+      SLIGHTLY NEGATIVE (-1 to -29 points):
+      - Excessive passive consumption (TV, YouTube >2hrs)
+      - Procrastination activities
+      - Mindless snacking
+      
+      MODERATELY NEGATIVE (-30 to -79 points):
+      - Social media scrolling (>30 minutes)
+      - Casual gaming (>1 hour)
+      - Binge-watching content
+      - Excessive shopping/browsing
+      
+      HIGHLY NEGATIVE (-80 to -200 points):
+      - Addictive behaviors (gambling, excessive gaming >3hrs)
+      - Harmful substances (smoking, excessive alcohol)
+      - Destructive activities (fights, vandalism)
+      - Activities that directly harm health/relationships
+      
+      MAGNITUDE DETERMINATION:
+      - Consider DURATION: longer harmful activities = more negative points
+      - Consider INTENSITY: "scrolled social media" = -20, "doom scrolled for 3 hours" = -60
+      - Consider FREQUENCY: occasional vs habitual behavior
+      - Consider IMPACT: immediate vs long-term consequences
+      
+      NATURE DETERMINATION:
+      - POSITIVE: Builds skills, health, relationships, or future opportunities
+      - NEGATIVE: Provides instant gratification without growth, wastes time, or causes harm
+      - Be strict but fair - not everything fun is negative
+      
       Even if the user provides only one activity, always return an array.
       If duration is not specified or clear, make a reasonable estimate or omit it.
-
-      Specific guidelines:
-      - Assign heavy negative points (-50 to -100) for cheap dopamine recreational activities such as excessive gaming, social media scrolling, or any activity that provides instant gratification without long-term benefits.
-      - Assign negative points (-50 to -100) for activities like masturbation or excessive indulgence.
-      - Treat addictive behaviors or overindulgence in pleasurable activities as negative.
-      - Maintain a strict stance on activities that may hinder productivity or self-improvement.
     
       User activities: ${activities}
 
-
-      Process these activities and return them in the required format.
+      Process these activities and return them in the required format with accurate magnitude and nature scoring.
     `,
     });
 
