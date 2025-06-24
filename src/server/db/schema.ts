@@ -25,10 +25,10 @@ export const posts = createTable(
     id: serial("id").primaryKey(),
     createdById: varchar("createdById", { length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     habitId: integer("habitId")
       .notNull()
-      .references(() => habits.id),
+      .references(() => habits.id, { onDelete: "cascade" }),
     description: text("description").notNull(),
     duration: integer("duration"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -55,7 +55,7 @@ export const habits = createTable(
     name: varchar("name", { length: 256 }).notNull(),
     userId: varchar("userId", { length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     points: integer("points").notNull().default(0),
     isTemplate: boolean("isTemplate").notNull().default(false),
   },
@@ -94,7 +94,7 @@ export const accounts = createTable(
   {
     userId: varchar("userId", { length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: 255 })
       .$type<AdapterAccount["type"]>()
       .notNull(),
@@ -128,7 +128,7 @@ export const sessions = createTable(
       .primaryKey(),
     userId: varchar("userId", { length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     expires: timestamp("expires", {
       mode: "date",
       withTimezone: true,
