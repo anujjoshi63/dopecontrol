@@ -6,12 +6,17 @@ import { and, gte, sum } from "drizzle-orm";
 
 import { habits, posts } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
-import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import {
   MAX_ACTIVITIES_PER_POST,
   processActivitiesWithAI,
 } from "@/app/api/ai-tool/ai-processing";
 import { TRPCError } from "@trpc/server";
+import {
+  createPostRateLimit,
+  aiProcessingRateLimit,
+  checkRateLimit
+} from "@/lib/rate-limit";
 const CACHE_EXPIRY_TIME = 60 * 60; // 1 hour
 async function updatePointsCache(
   userId: string,
@@ -91,6 +96,20 @@ export const postRouter = createTRPCRouter({
       const { activities } = input;
       const userId = ctx.session.user.id;
       const email = ctx.session.user.email;
+
+      // Apply rate limiting
+      await checkRateLimit(
+        createPostRateLimit,
+        userId,
+        "Daily post creation limit exceeded. Please try again tomorrow."
+      );
+
+      await checkRateLimit(
+        aiProcessingRateLimit,
+        userId,
+        "AI processing rate limit exceeded. Please try again in an hour."
+      );
+
       // Check the number of posts created today
       const today = new Date();
       today.setHours(0, 0, 0, 0);
