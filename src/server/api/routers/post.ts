@@ -40,7 +40,6 @@ export const postRouter = createTRPCRouter({
         habitId: z.number(),
         description: z.string(),
         duration: z.number().optional(),
-        userId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -48,14 +47,14 @@ export const postRouter = createTRPCRouter({
         .insert(posts)
         .values({
           habitId: input.habitId,
-          createdById: input.userId,
+          createdById: ctx.session.user.id,
           description: input.description,
           duration: input.duration,
         })
         .returning();
 
       // Update cache
-      await updatePointsCache(input.userId, ctx.db);
+      await updatePointsCache(ctx.session.user.id, ctx.db);
 
       return newPost;
     }),
