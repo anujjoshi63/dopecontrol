@@ -39,8 +39,8 @@ const Row = memo(
     if (!log || !habit) {
       return (
         <div style={style}>
-          <Card className="border-white/20 bg-white/10">
-            <CardContent className="p-4">
+          <Card className="mb-2 border-white/10 bg-white/5 shadow-lg backdrop-blur-sm">
+            <CardContent className="p-4 py-2">
               <p className="text-white/60">Invalid entry</p>
             </CardContent>
           </Card>
@@ -50,8 +50,8 @@ const Row = memo(
 
     return (
       <div style={style}>
-        <Card className="border-white/20 bg-white/10">
-          <CardContent className="flex items-center justify-between p-4">
+        <Card className="mb-2 border-white/10 bg-white/5 shadow-lg backdrop-blur-sm">
+          <CardContent className="flex items-center justify-between p-4 py-2">
             <div>
               <p className="font-semibold text-white">{habit?.name}</p>
               <p className="text-sm text-white/60">
@@ -59,9 +59,8 @@ const Row = memo(
               </p>
             </div>
             <div
-              className={`text-lg font-bold ${
-                (habit?.points ?? 0) >= 0 ? "text-green-400" : "text-red-400"
-              }`}
+              className={`text-lg font-bold ${(habit?.points ?? 0) >= 0 ? "text-green-400" : "text-red-400"
+                }`}
             >
               {(habit?.points ?? 0) >= 0 ? "+" : ""}
               {habit?.points ?? 0}
@@ -84,11 +83,11 @@ export default memo(function LogsList({ logs, habits }: LogsListProps) {
   });
 
   return (
-    <ScrollArea className="h-[calc(100vh-16rem)] pr-4">
+    <ScrollArea className="h-[calc(100vh-16rem)] pr-4 pl-4">
       <ScrollAreaViewport ref={parentRef}>
         <div
           style={{
-            height: `${virtualizer.getTotalSize()}px`,
+            height: `${virtualizer.getTotalSize() / 4.854 - 160}px`,
             width: "100%",
             position: "relative",
           }}
@@ -108,11 +107,11 @@ export default memo(function LogsList({ logs, habits }: LogsListProps) {
                   left: 0,
                   width: "100%",
                   height: `${virtualRow.size}px`,
-                  transform: `translateY(${virtualRow.start}px)`,
+                  transform: `translateY(${virtualRow.start / 1.25}px)`,
                 }}
               >
-                <Card className="border-white/20 bg-white/10">
-                  <CardContent className="flex items-center justify-between p-4">
+                <Card className="border-white/10 bg-white/5 shadow-lg backdrop-blur-sm">
+                  <CardContent className="flex items-center justify-between p-4 py-2">
                     <div>
                       <p className="font-semibold text-white">{habit?.name}</p>
                       <p className="text-sm text-white/60">
@@ -120,11 +119,10 @@ export default memo(function LogsList({ logs, habits }: LogsListProps) {
                       </p>
                     </div>
                     <div
-                      className={`text-lg font-bold ${
-                        (habit?.points ?? 0) >= 0
-                          ? "text-green-400"
-                          : "text-red-400"
-                      }`}
+                      className={`text-lg font-bold ${(habit?.points ?? 0) >= 0
+                        ? "text-green-400"
+                        : "text-red-400"
+                        }`}
                     >
                       {(habit?.points ?? 0) >= 0 ? "+" : ""}
                       {habit?.points ?? 0}
