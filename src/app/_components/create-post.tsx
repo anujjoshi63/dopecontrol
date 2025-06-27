@@ -55,6 +55,9 @@ export function CreatePost() {
           Log Your Activities{" "}
           <Sparkles className="h-5 w-5 fill-amber-500 stroke-amber-500" />
         </CardTitle>
+        <CardDescription className="text-white/60">
+          Describe your activities. DopeAI tracks progress and habits.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -62,7 +65,7 @@ export function CreatePost() {
             tabIndex={0}
             value={activities}
             onChange={(e) => setActivities(e.target.value)}
-            placeholder="Tell your activities and let Dope AI help you regulate fun"
+            placeholder="What did you do? Type it. DopeAI handles the rest."
             className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
             rows={4}
             maxLength={500}
