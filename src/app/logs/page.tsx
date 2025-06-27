@@ -35,7 +35,7 @@ export default async function LogsPage() {
 
         <Card className="flex-grow border-white/10 bg-white/5 shadow-lg backdrop-blur-sm">
           <CardHeader>
-            <CardTitle className="text-white/90">Logs</CardTitle>
+            <CardTitle className="flex items-center gap-2 tracking-tighter text-white/90">Logs</CardTitle>
           </CardHeader>
           <CardContent>
             <LogsList logs={logs} habits={habits} />
