@@ -16,7 +16,7 @@ export default function Summary() {
   const { data: pointsData, isLoading } = api.post.getPoints.useQuery();
 
   return (
-    <Card className="border-white/10 bg-white/5 bg-gradient-to-br from-white/5 to-white/10 shadow-lg backdrop-blur-sm transition-all duration-300">
+    <Card className="border-white/10 bg-white/5 shadow-lg backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 tracking-tighter text-white/90">
           DopePoints
