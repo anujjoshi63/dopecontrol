@@ -30,7 +30,7 @@ const ProfilePicture = ({
     <DropdownMenu>
       <DropdownMenuTrigger 
         aria-label={`${name} profile menu`}
-        className="focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full"
+        className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-full"
       >
         <Avatar className="transition-all hover:opacity-80">
           <AvatarImage 
