@@ -65,7 +65,7 @@ export function CreatePost() {
             tabIndex={0}
             value={activities}
             onChange={(e) => setActivities(e.target.value)}
-            placeholder="What did you do? Type it. DopeAI handles the rest."
+            placeholder="Type what you did, DopeAI handles the rest"
             className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
             rows={4}
             maxLength={500}
@@ -75,7 +75,7 @@ export function CreatePost() {
             className="w-full bg-white/10 text-white hover:bg-white/20"
             disabled={createPost.isPending || !activities.trim()}
           >
-            {createPost.isPending ? "Processing..." : "Submit Activities"}
+            {createPost.isPending ? "Processing..." : "Add one activity to start"}
           </Button>
         </form>
       </CardContent>
