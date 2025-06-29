@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
   // Apply rate limiting to API routes
   if (request.nextUrl.pathname.startsWith("/api/")) {
     try {
-      const identifier = request.ip ?? "anonymous";
+      const identifier = request.headers.get('x-forwarded-for') ?? "anonymous";
       await checkRateLimit(
         generalApiRateLimit,
         identifier,

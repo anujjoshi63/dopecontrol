@@ -7,6 +7,7 @@ import { and, gte, sum } from "drizzle-orm";
 import { habits, posts } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type * as schema from "@/server/db/schema";
 import {
   MAX_ACTIVITIES_PER_POST,
   processActivitiesWithAI,
@@ -20,7 +21,7 @@ import {
 const CACHE_EXPIRY_TIME = 60 * 60; // 1 hour
 async function updatePointsCache(
   userId: string,
-  db: PostgresJsDatabase<typeof import("@/server/db/schema")>,
+  db: PostgresJsDatabase<typeof schema>,
 ) {
   console.log("Updating points cache for user:", userId);
   const cacheKey = `summary:user:${userId}:posts:points_sum`;
@@ -79,7 +80,7 @@ export const postRouter = createTRPCRouter({
           },
         },
       });
-      console.log({ res });
+      // console.log({ res });
       return res;
     } catch (error) {
       console.error(error);
